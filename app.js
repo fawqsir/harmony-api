@@ -52,6 +52,13 @@ var hasHarmonyHubClient = function(req, res, next) {
 }
 app.use(hasHarmonyHubClient)
 
+if (config.hasOwnProperty("hubs")) {
+  config.hubs.forEach(function(hub) {
+    harmony(hub.ip).then(function(client){
+      startProcessing(parameterize(hub.friendlyName), client)
+    })
+  })
+}
 
 var discover = new harmonyHubDiscover(61991)
 
