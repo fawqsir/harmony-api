@@ -108,13 +108,13 @@ function startProcessing(hubSlug, harmonyClient){
 }
 
 function updateActivities(hubSlug){
-  harmonyHubClient = harmonyHubClients[hubSlug]
+  harmonyHubClientUpdateActivity = harmonyHubClients[hubSlug]
 
-  if (!harmonyHubClient) { return }
+  if (!harmonyHubClientUpdateActivity) { return }
   console.log('Updating activities for ' + hubSlug + '.')
 
   try {
-    harmonyHubClient.getActivities().then(function(activities){
+    harmonyHubClientUpdateActivity.getActivities().then(function(activities){
       foundActivities = {}
       activities.some(function(activity) {
         foundActivities[activity.id] = {id: activity.id, slug: parameterize(activity.label), label:activity.label, isAVActivity: activity.isAVActivity}
@@ -129,21 +129,21 @@ function updateActivities(hubSlug){
   } catch(err) {
     console.log("ERROR: " + err.message);
   }
-  // harmonyHubClient.end();
+  harmonyHubClientUpdateActivity.end();
 
 }
 
 function updateState(hubSlug){
-  harmonyHubClient = harmonyHubClients[hubSlug]
+  harmonyHubClientUpdateState = harmonyHubClients[hubSlug]
 
-  if (!harmonyHubClient) { return }
+  if (!harmonyHubClientUpdateState) { return }
   console.log('Updating state for ' + hubSlug + '.')
 
   // save for comparing later after we get the true current state
   var previousActivity = currentActivity(hubSlug)
 
   try {
-    harmonyHubClient.getCurrentActivity().then(function(activityId){
+    harmonyHubClientUpdateState.getCurrentActivity().then(function(activityId){
       data = {off: true}
 
       activity = harmonyActivitiesCache[hubSlug][activityId]
@@ -170,16 +170,16 @@ function updateState(hubSlug){
   } catch(err) {
     console.log("ERROR: " + err.message);
   }
-  // harmonyHubClient.end();
+  harmonyHubClientUpdateState.end();
 }
 
 function updateDevices(hubSlug){
-  harmonyHubClient = harmonyHubClients[hubSlug]
+  harmonyHubClientUpdateDevice = harmonyHubClients[hubSlug]
 
-  if (!harmonyHubClient) { return }
+  if (!harmonyHubClientUpdateDevice) { return }
   console.log('Updating devices for ' + hubSlug + '.')
   try {
-    harmonyHubClient.getAvailableCommands().then(function(commands) {
+    harmonyHubClientUpdateDevice.getAvailableCommands().then(function(commands) {
       foundDevices = {}
       commands.device.some(function(device) {
         deviceCommands = getCommandsFromControlGroup(device.controlGroup)
@@ -197,7 +197,7 @@ function updateDevices(hubSlug){
   } catch(err) {
     console.log("Devices ERROR: " + err.message);
   }
-  // harmonyHubClient.end();
+  harmonyHubClientUpdateDevice.end();
 }
 
 function getCommandsFromControlGroup(controlGroup){
