@@ -10,10 +10,10 @@ RUN rm -Rf node_modules
 RUN npm install
 
 
-ENV CONFIG_DIR /config
-
 COPY . /usr/src/app
 COPY ./config/config.sample.json /config/config.json
+
+ENV CONFIG_DIR /config
 
 EXPOSE 8282
 CMD [ "npm", "start" ]
