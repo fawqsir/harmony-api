@@ -13,6 +13,7 @@ COPY . /usr/src/app
 COPY ./config/config.sample.json /config/config.json
 
 ENV CONFIG_DIR /config
+ENV NODE_ENV production
 
 EXPOSE 8282
 CMD [ "npm", "start" ]
