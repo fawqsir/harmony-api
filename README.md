@@ -8,7 +8,6 @@ With HTTP, you can simply turn on and off activities, check hub status, and send
 commands to individual devices with simple HTTP requests from almost any other
 project.
 
-
 ## Features
 
 * Control multiple Harmony hubs.
@@ -21,15 +20,7 @@ activity is.
 * List device commands.
 * Execute discrete commands for each device.
 
-## Setup
-
-    script/bootstrap
-
 ## Settings
-
-## Running It
-Get up and running immediately with `script/server`.
-
 #### Note: 
 On some distros, you might get an error when running it:
 `/usr/bin/node: No such file or directory`
@@ -39,19 +30,6 @@ That can probably be fixed by creating a symlink:
 
 Harmony API will run on port `8282` by default. Use the `PORT` environment
 variable to use your own port.
-
-### Forever
-harmony-api has support for [Forever](https://github.com/foreverjs/forever). It uses
-`launchd` on OS X to kick it off so that it starts on boot. There is no `init.d`
-or other Linux support of this type. Pull requests would be welcome for this though.
-
-### Development
-You can simply run it by calling `script/server`. This will run it in development
-mode with logging to standard out.
-
-### Install as Service on OS X
-
-    script/install
 
 ### Docker
 Installation with Docker is straightforward. Adjust the following command so that
@@ -74,25 +52,6 @@ discovery requires host networking (`--net=host`). However, you can specify your
     },
   ]
 ```
-## Logging
-
-Harmony API logs all of its requests. In `production`, it logs to a file at `log/logs.log`.
-In `development` mode, it just logs to stdout.
-
-## How to Upgrade to 2.0
-
-Simply run `script/upgrade` from the root of the project and Harmony API will
-upgrade to the newest version.
-
-You are then going to have to change anything you integrate with Harmony API to
-reflect the change in HTTP endpoints and MQTT topics. Read the docs in this
-README to see how they have changed.
-
-## Development
-
-Launch the app via `script/server` to run it in the development environment.
-
-
 
 ## HTTP API Docs
 
