@@ -1,3 +1,9 @@
 {
-  "enableHTTPserver": true
+	"enableHTTPserver": true,
+	"hubs": [
+    {
+      "name": "Living",
+      "ip": "192.168.5.200"
+    }
+  ]
 }
