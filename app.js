@@ -129,7 +129,7 @@ function updateActivities(hubSlug){
   } catch(err) {
     console.log("ERROR: " + err.message);
   }
-  harmonyHubClient.end();
+  // harmonyHubClient.end();
 
 }
 
@@ -170,7 +170,7 @@ function updateState(hubSlug){
   } catch(err) {
     console.log("ERROR: " + err.message);
   }
-  harmonyHubClient.end();
+  // harmonyHubClient.end();
 }
 
 function updateDevices(hubSlug){
@@ -197,7 +197,7 @@ function updateDevices(hubSlug){
   } catch(err) {
     console.log("Devices ERROR: " + err.message);
   }
-  harmonyHubClient.end();
+  // harmonyHubClient.end();
 }
 
 function getCommandsFromControlGroup(controlGroup){
@@ -231,7 +231,7 @@ function currentActivity(hubSlug){
   if (!harmonyHubClient || !harmonyHubState) { return null}
 
   return harmonyHubState.current_activity
-  harmonyHubClient.end();
+  // harmonyHubClient.end();
 }
 
 function activityBySlugs(hubSlug, activitySlug){
@@ -296,7 +296,7 @@ function off(hubSlug){
   harmonyHubClient.turnOff().then(function(){
     updateState(hubSlug)
   })
-  harmonyHubClient.end();
+  // harmonyHubClient.end();
 }
 
 function startActivity(hubSlug, activityId){
@@ -306,7 +306,7 @@ function startActivity(hubSlug, activityId){
   harmonyHubClient.startActivity(activityId).then(function(){
     updateState(hubSlug)
   })
-  harmonyHubClient.end();
+  // harmonyHubClient.end();
 }
 
 function sendAction(hubSlug, action, repeat){
@@ -321,7 +321,7 @@ function sendAction(hubSlug, action, repeat){
        harmonyHubClient.send('holdAction', releaseAction)
     })
   }
-  harmonyHubClient.end();
+  // harmonyHubClient.end();
 }
 
 app.get('/_ping', function(req, res){
@@ -345,7 +345,7 @@ app.get('/hubs/:hubSlug/activities', function(req, res){
   }else{
     res.status(404).json({message: "Not Found"})
   }
-  harmonyHubClient.end();
+  // harmonyHubClient.end();
 })
 
 app.get('/hubs/:hubSlug/activities/:activitySlug/commands', function(req, res){
@@ -369,7 +369,7 @@ app.get('/hubs/:hubSlug/devices', function(req, res){
   }else{
     res.status(404).json({message: "Not Found"})
   }
-  harmonyHubClient.end();
+  // harmonyHubClient.end();
 })
 
 app.get('/hubs/:hubSlug/devices/:deviceSlug/commands', function(req, res){
@@ -396,7 +396,7 @@ app.get('/hubs/:hubSlug/status', function(req, res){
   }else{
     res.status(404).json({message: "Not Found"})
   }
-  harmonyHubClient.end();
+  // harmonyHubClient.end();
 })
 
 app.get('/hubs/:hubSlug/commands', function(req, res){
@@ -437,7 +437,7 @@ app.put('/hubs/:hubSlug/off', function(req, res){
   }else{
     res.status(404).json({message: "Not Found"})
   }
-  harmonyHubClient.end();
+  // harmonyHubClient.end();
 })
 
 // DEPRECATED
