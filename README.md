@@ -2,15 +2,11 @@
 
 Harmony API is a simple server allowing you to query/control multiple local [Harmony
 Home Hubs](http://myharmony.com/products/detail/home-hub/) and their devices
-over HTTP or MQTT.
+over HTTP
 
 With HTTP, you can simply turn on and off activities, check hub status, and send
 commands to individual devices with simple HTTP requests from almost any other
 project.
-
-With MQTT, you can easily monitor the state of your devices as well as set
-the current activity of your hub or send specific commands per device. This
-makes it super easy to integrate into your existing home automation setup.
 
 
 ## Features
@@ -30,25 +26,6 @@ activity is.
     script/bootstrap
 
 ## Settings
-
-Harmony API discovers your hubs automatically. You can optionally add your MQTT
-broker's host to connect to it.
-
-```json
-{
-  "mqtt_host": "mqtt://192.168.1.106",
-  "mqtt_options": {
-      "port": 1883,
-      "username": "someuser",
-      "password": "somepassword",
-      "rejectUnauthorized": false
-  },
-  "topic_namespace": "home/harmony"
-}
-```
-
-`mqtt_options` is optional, see the [mqtt](https://github.com/mqttjs/MQTT.js#connect) project for
-allowed host and options values.
 
 ## Running It
 Get up and running immediately with `script/server`.
@@ -115,73 +92,7 @@ README to see how they have changed.
 
 Launch the app via `script/server` to run it in the development environment.
 
-## MQTT Docs
 
-harmony-api can report its state changes to your MQTT broker. Just edit your
-config file in `config/config.json` to add your MQTT host and options.
-
-By default harmony-api publishes topics with the namespace of: `harmony-api`. This can be overriden
-by setting `topic_namespace` in your config file.
-
-### State Topics
-
-When the state changes on your harmony hub, state topics will be immediately
-broadcasted over your broker. There's quite a few topics that are broadcasted.
-
-State topics are namespaced by your Harmony hub's name, as a slug. You can rename your hub
-in the Harmony app.
-
-Here's a list:
-
-#### Current State
-
-This topic describes the current power state. Message is `on` or `off`.
-
-`harmony-api/hubs/family-room/state` `on`
-
-#### Current Activity
-
-This topic describes what the current activity of the hub is. The message is
-the slug of an activity name.
-
-`harmony-api/hubs/family-room/current_activity` `watch-tv`
-
-#### Activity States
-
-These topics describe the state of each activity that the hub has. The message
-is `on` or `off`. There will a topic for every activity on your hub.
-
-`harmony-api/hubs/family-room/activities/watch-tv/state` `off`  
-`harmony-api/hubs/family-room/activities/watch-apple-tv/state` `on`  
-`harmony-api/hubs/family-room/activities/play-xbox-one/state` `off`  
-
-
-### Command Topics
-
-You can also command harmony-api to change activities, and issue device and acivity commands by publishing topics.
-harmony-api listens to these topics and will change to the activity, or issue the command when it sees
-it.
-
-#### Switching activities
-Just provide the slug of the hub and activity you want to switch to and `on` as
-the message. Any use of this topic with the message `off` will turn everything
-off.
-
-`harmony-api/hubs/family-room/activities/watch-tv/command` `on`  
-
-#### Device commands
-Just provide the slug of the hub and the device to control with the command you want to execute. 
-`harmony-api/hubs/family-room/devices/tv/command` `volume-down`
-
-To optionally repeat the command any number of times, provide an optional repeat integer.
-`harmony-api/hubs/family-room/devices/tv/command` `volume-down:5`
-
-#### Current activity commands
-Just provide the slug of the hub and the command you want to execute. 
-`harmony-api/hubs/family-room/command` `volume-down`
-
-To optionally repeat the command any number of times, provide an optional repeat integer.
-`harmony-api/hubs/family-room/command` `volume-down:5`
 
 ## HTTP API Docs
 
