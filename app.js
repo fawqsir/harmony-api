@@ -290,38 +290,38 @@ function commandBySlugs(hubSlug, deviceSlug, commandSlug){
 }
 
 function off(hubSlug){
-  harmonyHubClient = harmonyHubClients[hubSlug]
-  if (!harmonyHubClient) { return }
+  harmonyHubClientOff = harmonyHubClients[hubSlug]
+  if (!harmonyHubClientOff) { return }
 
-  harmonyHubClient.turnOff().then(function(){
+  harmonyHubClientOff.turnOff().then(function(){
     updateState(hubSlug)
   })
-  // harmonyHubClient.end();
+  harmonyHubClientOff.end();
 }
 
 function startActivity(hubSlug, activityId){
-  harmonyHubClient = harmonyHubClients[hubSlug]
-  if (!harmonyHubClient) { return }
+  harmonyHubClientStartActivity = harmonyHubClients[hubSlug]
+  if (!harmonyHubClientStartActivity) { return }
 
-  harmonyHubClient.startActivity(activityId).then(function(){
+  harmonyHubClientStartActivity.startActivity(activityId).then(function(){
     updateState(hubSlug)
   })
-  // harmonyHubClient.end();
+  harmonyHubClientStartActivity.end();
 }
 
 function sendAction(hubSlug, action, repeat){
   repeat = Number.parseInt(repeat) || 1;
-  harmonyHubClient = harmonyHubClients[hubSlug]
-  if (!harmonyHubClient) { return }
+  harmonyHubClientSendAction = harmonyHubClients[hubSlug]
+  if (!harmonyHubClientSendAction) { return }
 
   var pressAction = 'action=' + action + ':status=press:timestamp=0';
   var releaseAction =  'action=' + action + ':status=release:timestamp=55';
   for (var i = 0; i < repeat; i++) {
-    harmonyHubClient.send('holdAction', pressAction).then(function (){
-       harmonyHubClient.send('holdAction', releaseAction)
+    harmonyHubClientSendAction.send('holdAction', pressAction).then(function (){
+       harmonyHubClientSendAction.send('holdAction', releaseAction)
     })
   }
-  // harmonyHubClient.end();
+  harmonyHubClientSendAction.end();
 }
 
 app.get('/_ping', function(req, res){
@@ -338,14 +338,14 @@ app.get('/hubs', function(req, res){
 
 app.get('/hubs/:hubSlug/activities', function(req, res){
   hubSlug = req.params.hubSlug
-  harmonyHubClient = harmonyHubClients[hubSlug]
+  harmonyHubClientGetActivity = harmonyHubClients[hubSlug]
 
-  if (harmonyHubClient) {
+  if (harmonyHubClientGetActivity) {
     res.json({activities: cachedHarmonyActivities(hubSlug)})
   }else{
     res.status(404).json({message: "Not Found"})
   }
-  // harmonyHubClient.end();
+  harmonyHubClientGetActivity.end();
 })
 
 app.get('/hubs/:hubSlug/activities/:activitySlug/commands', function(req, res){
@@ -362,14 +362,14 @@ app.get('/hubs/:hubSlug/activities/:activitySlug/commands', function(req, res){
 
 app.get('/hubs/:hubSlug/devices', function(req, res){
   hubSlug = req.params.hubSlug
-  harmonyHubClient = harmonyHubClients[hubSlug]
+  harmonyHubClientGetDevice = harmonyHubClients[hubSlug]
 
-  if (harmonyHubClient) {
+  if (harmonyHubClientGetDevice) {
     res.json({devices: cachedHarmonyDevices(hubSlug)})
   }else{
     res.status(404).json({message: "Not Found"})
   }
-  // harmonyHubClient.end();
+  harmonyHubClientGetDevice.end();
 })
 
 app.get('/hubs/:hubSlug/devices/:deviceSlug/commands', function(req, res){
@@ -389,14 +389,14 @@ app.get('/hubs/:hubSlug/devices/:deviceSlug/commands', function(req, res){
 
 app.get('/hubs/:hubSlug/status', function(req, res){
   hubSlug = req.params.hubSlug
-  harmonyHubClient = harmonyHubClients[hubSlug]
+  harmonyHubClientStatus = harmonyHubClients[hubSlug]
 
-  if (harmonyHubClient) {
+  if (harmonyHubClientStatus) {
     res.json(harmonyHubStates[hubSlug])
   }else{
     res.status(404).json({message: "Not Found"})
   }
-  // harmonyHubClient.end();
+  harmonyHubClientStatus.end();
 })
 
 app.get('/hubs/:hubSlug/commands', function(req, res){
@@ -429,15 +429,15 @@ app.post('/hubs/:hubSlug/commands/:commandSlug', function(req, res){
 
 app.put('/hubs/:hubSlug/off', function(req, res){
   hubSlug = req.params.hubSlug
-  harmonyHubClient = harmonyHubClients[hubSlug]
+  harmonyHubClientPutOff = harmonyHubClients[hubSlug]
 
-  if (harmonyHubClient) {
+  if (harmonyHubClientPutOff) {
     off(hubSlug)
     res.json({message: "ok"})
   }else{
     res.status(404).json({message: "Not Found"})
   }
-  // harmonyHubClient.end();
+  harmonyHubClientPutOff.end();
 })
 
 // DEPRECATED
