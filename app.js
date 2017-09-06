@@ -1,7 +1,6 @@
 var fs = require('fs')
 var path = require('path')
 var util = require('util')
-//var mqtt = require('mqtt');
 var express = require('express')
 var morgan = require('morgan')
 var bodyParser = require('body-parser')
@@ -25,11 +24,6 @@ var harmonyStateUpdateTimers = {}
 var harmonyDevicesCache = {}
 var harmonyDeviceUpdateInterval = 5*60*1000 // 5 minute
 var harmonyDeviceUpdateTimers = {}
-
-// var mqttClient = config.hasOwnProperty("mqtt_options") ?
-    // mqtt.connect(config.mqtt_host, config.mqtt_options) :
-    // mqtt.connect(config.mqtt_host);
-// var TOPIC_NAMESPACE = config.topic_namespace || "harmony-api";
 
 var enableHTTPserver = config.hasOwnProperty("enableHTTPserver") ?
     config.enableHTTPserver : true;
@@ -90,65 +84,6 @@ if (config.hasOwnProperty("hubs") && Array.isArray(config.hubs)) {
   console.log('Starting discovery.')
   discover.start()
 }
-
-// mqtt api
-
-// mqttClient.on('connect', function () {
-  // mqttClient.subscribe(TOPIC_NAMESPACE + '/hubs/+/activities/+/command')
-  // mqttClient.subscribe(TOPIC_NAMESPACE + '/hubs/+/devices/+/command')
-  // mqttClient.subscribe(TOPIC_NAMESPACE + '/hubs/+/command')
-// });
-
-// mqttClient.on('message', function (topic, message) {
-  // var activityCommandPattern = new RegExp(/hubs\/(.*)\/activities\/(.*)\/command/);
-  // var deviceCommandPattern = new RegExp(/hubs\/(.*)\/devices\/(.*)\/command/);
-  // var currentActivityCommandPattern = new RegExp(/hubs\/(.*)\/command/);
-  // var activityCommandMatches = topic.match(activityCommandPattern);
-  // var deviceCommandMatches = topic.match(deviceCommandPattern);
-  // var currentActivityCommandMatches = topic.match(currentActivityCommandPattern);
-
-  // if (activityCommandMatches) {
-    // var hubSlug = activityCommandMatches[1]
-    // var activitySlug = activityCommandMatches[2]
-    // var state = message.toString()
-
-    // activity = activityBySlugs(hubSlug, activitySlug)
-    // if (!activity) { return }
-
-    // if (state === 'on') {
-      // startActivity(hubSlug, activity.id)
-    // }else if (state === 'off'){
-      // off(hubSlug)
-    // }
-  // } else if (deviceCommandMatches) {
-    // var hubSlug = deviceCommandMatches[1]
-    // var deviceSlug = deviceCommandMatches[2]
-    // var messageComponents = message.toString().split(':')
-    // var command = messageComponents[0]
-    // var repeat = messageComponents[1]
-
-    // command = commandBySlugs(hubSlug, deviceSlug, command)
-    // if (!command) { return }
-
-    // sendAction(hubSlug, command.action, repeat)
-  // } else if (currentActivityCommandMatches) {
-    // var hubSlug = currentActivityCommandMatches[1]
-    // var messageComponents = message.toString().split(':')
-    // var commandSlug = messageComponents[0]
-    // var repeat = messageComponents[1]
-
-    // hubState = harmonyHubStates[hubSlug]
-    // if (!hubState) { return }
-
-    // activity = activityBySlugs(hubSlug, hubState.current_activity.slug)
-    // if (!activity) { return }
-
-    // command = activity.commands[commandSlug]
-    // if (!command) { return }
-
-    // sendAction(hubSlug, command.action, repeat)
-  // }
-// });
 
 function startProcessing(hubSlug, harmonyClient){
   harmonyHubClients[hubSlug] = harmonyClient
@@ -225,21 +160,11 @@ function updateState(hubSlug){
       harmonyHubStates[hubSlug] = data
 
       if (!previousActivity || (activity.id != previousActivity.id)) {
-        // publish('hubs/' + hubSlug + '/' + 'current_activity', activity.slug, {retain: true})
-        // publish('hubs/' + hubSlug + '/' + 'state', activity.id == -1 ? 'off' : 'on' , {retain: true})
-
         for (var i = 0; i < cachedHarmonyActivities(hubSlug).length; i++) {
           activities = cachedHarmonyActivities(hubSlug)
           cachedActivity = activities[i]
-
-          // if (activity == cachedActivity) {
-            // publish('hubs/' + hubSlug + '/' + 'activities/' + cachedActivity.slug + '/state', 'on', {retain: true})
-          // }else{
-            // publish('hubs/' + hubSlug + '/' + 'activities/' + cachedActivity.slug + '/state', 'off', {retain: true})
-          // }
         }
       }
-
     })
   } catch(err) {
     console.log("ERROR: " + err.message);
@@ -392,11 +317,6 @@ function sendAction(hubSlug, action, repeat){
     })
   }
 }
-
-// function publish(topic, message, options){
-  // topic = TOPIC_NAMESPACE + "/" + topic
-  // mqttClient.publish(topic, message, options);
-// }
 
 app.get('/_ping', function(req, res){
   res.send('OK');
