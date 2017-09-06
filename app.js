@@ -108,13 +108,13 @@ function startProcessing(hubSlug, harmonyClient){
 }
 
 function updateActivities(hubSlug){
-  harmonyHubClientUpdateActivity = harmonyHubClients[hubSlug]
+  harmonyHubClient = harmonyHubClients[hubSlug]
 
-  if (!harmonyHubClientUpdateActivity) { return }
+  if (!harmonyHubClient) { return }
   console.log('Updating activities for ' + hubSlug + '.')
 
   try {
-    harmonyHubClientUpdateActivity.getActivities().then(function(activities){
+    harmonyHubClient.getActivities().then(function(activities){
       foundActivities = {}
       activities.some(function(activity) {
         foundActivities[activity.id] = {id: activity.id, slug: parameterize(activity.label), label:activity.label, isAVActivity: activity.isAVActivity}
@@ -129,21 +129,21 @@ function updateActivities(hubSlug){
   } catch(err) {
     console.log("ERROR: " + err.message);
   }
-  harmonyHubClientUpdateActivity.end();
+  // harmonyHubClient.end();
 
 }
 
 function updateState(hubSlug){
-  harmonyHubClientUpdateState = harmonyHubClients[hubSlug]
+  harmonyHubClient = harmonyHubClients[hubSlug]
 
-  if (!harmonyHubClientUpdateState) { return }
+  if (!harmonyHubClient) { return }
   console.log('Updating state for ' + hubSlug + '.')
 
   // save for comparing later after we get the true current state
   var previousActivity = currentActivity(hubSlug)
 
   try {
-    harmonyHubClientUpdateState.getCurrentActivity().then(function(activityId){
+    harmonyHubClient.getCurrentActivity().then(function(activityId){
       data = {off: true}
 
       activity = harmonyActivitiesCache[hubSlug][activityId]
@@ -170,16 +170,16 @@ function updateState(hubSlug){
   } catch(err) {
     console.log("ERROR: " + err.message);
   }
-  harmonyHubClientUpdateState.end();
+  // harmonyHubClient.end();
 }
 
 function updateDevices(hubSlug){
-  harmonyHubClientUpdateDevice = harmonyHubClients[hubSlug]
+  harmonyHubClient = harmonyHubClients[hubSlug]
 
-  if (!harmonyHubClientUpdateDevice) { return }
+  if (!harmonyHubClient) { return }
   console.log('Updating devices for ' + hubSlug + '.')
   try {
-    harmonyHubClientUpdateDevice.getAvailableCommands().then(function(commands) {
+    harmonyHubClient.getAvailableCommands().then(function(commands) {
       foundDevices = {}
       commands.device.some(function(device) {
         deviceCommands = getCommandsFromControlGroup(device.controlGroup)
@@ -197,7 +197,7 @@ function updateDevices(hubSlug){
   } catch(err) {
     console.log("Devices ERROR: " + err.message);
   }
-  harmonyHubClientUpdateDevice.end();
+  // harmonyHubClient.end();
 }
 
 function getCommandsFromControlGroup(controlGroup){
@@ -290,38 +290,38 @@ function commandBySlugs(hubSlug, deviceSlug, commandSlug){
 }
 
 function off(hubSlug){
-  harmonyHubClientOff = harmonyHubClients[hubSlug]
-  if (!harmonyHubClientOff) { return }
+  harmonyHubClient = harmonyHubClients[hubSlug]
+  if (!harmonyHubClient) { return }
 
-  harmonyHubClientOff.turnOff().then(function(){
+  harmonyHubClient.turnOff().then(function(){
     updateState(hubSlug)
   })
-  harmonyHubClientOff.end();
+  // harmonyHubClient.end();
 }
 
 function startActivity(hubSlug, activityId){
-  harmonyHubClientStartActivity = harmonyHubClients[hubSlug]
-  if (!harmonyHubClientStartActivity) { return }
+  harmonyHubClient = harmonyHubClients[hubSlug]
+  if (!harmonyHubClient) { return }
 
-  harmonyHubClientStartActivity.startActivity(activityId).then(function(){
+  harmonyHubClient.startActivity(activityId).then(function(){
     updateState(hubSlug)
   })
-  harmonyHubClientStartActivity.end();
+  // harmonyHubClient.end();
 }
 
 function sendAction(hubSlug, action, repeat){
   repeat = Number.parseInt(repeat) || 1;
-  harmonyHubClientSendAction = harmonyHubClients[hubSlug]
-  if (!harmonyHubClientSendAction) { return }
+  harmonyHubClient = harmonyHubClients[hubSlug]
+  if (!harmonyHubClient) { return }
 
   var pressAction = 'action=' + action + ':status=press:timestamp=0';
   var releaseAction =  'action=' + action + ':status=release:timestamp=55';
   for (var i = 0; i < repeat; i++) {
-    harmonyHubClientSendAction.send('holdAction', pressAction).then(function (){
-       harmonyHubClientSendAction.send('holdAction', releaseAction)
+    harmonyHubClient.send('holdAction', pressAction).then(function (){
+       harmonyHubClient.send('holdAction', releaseAction)
     })
   }
-  harmonyHubClientSendAction.end();
+  // harmonyHubClient.end();
 }
 
 app.get('/_ping', function(req, res){
@@ -338,14 +338,14 @@ app.get('/hubs', function(req, res){
 
 app.get('/hubs/:hubSlug/activities', function(req, res){
   hubSlug = req.params.hubSlug
-  harmonyHubClientGetActivity = harmonyHubClients[hubSlug]
+  harmonyHubClient = harmonyHubClients[hubSlug]
 
-  if (harmonyHubClientGetActivity) {
+  if (harmonyHubClient) {
     res.json({activities: cachedHarmonyActivities(hubSlug)})
   }else{
     res.status(404).json({message: "Not Found"})
   }
-  harmonyHubClientGetActivity.end();
+  // harmonyHubClient.end();
 })
 
 app.get('/hubs/:hubSlug/activities/:activitySlug/commands', function(req, res){
@@ -362,14 +362,14 @@ app.get('/hubs/:hubSlug/activities/:activitySlug/commands', function(req, res){
 
 app.get('/hubs/:hubSlug/devices', function(req, res){
   hubSlug = req.params.hubSlug
-  harmonyHubClientGetDevice = harmonyHubClients[hubSlug]
+  harmonyHubClient = harmonyHubClients[hubSlug]
 
-  if (harmonyHubClientGetDevice) {
+  if (harmonyHubClient) {
     res.json({devices: cachedHarmonyDevices(hubSlug)})
   }else{
     res.status(404).json({message: "Not Found"})
   }
-  harmonyHubClientGetDevice.end();
+  // harmonyHubClient.end();
 })
 
 app.get('/hubs/:hubSlug/devices/:deviceSlug/commands', function(req, res){
@@ -389,14 +389,14 @@ app.get('/hubs/:hubSlug/devices/:deviceSlug/commands', function(req, res){
 
 app.get('/hubs/:hubSlug/status', function(req, res){
   hubSlug = req.params.hubSlug
-  harmonyHubClientStatus = harmonyHubClients[hubSlug]
+  harmonyHubClient = harmonyHubClients[hubSlug]
 
-  if (harmonyHubClientStatus) {
+  if (harmonyHubClient) {
     res.json(harmonyHubStates[hubSlug])
   }else{
     res.status(404).json({message: "Not Found"})
   }
-  harmonyHubClientStatus.end();
+  // harmonyHubClient.end();
 })
 
 app.get('/hubs/:hubSlug/commands', function(req, res){
@@ -429,15 +429,15 @@ app.post('/hubs/:hubSlug/commands/:commandSlug', function(req, res){
 
 app.put('/hubs/:hubSlug/off', function(req, res){
   hubSlug = req.params.hubSlug
-  harmonyHubClientPutOff = harmonyHubClients[hubSlug]
+  harmonyHubClient = harmonyHubClients[hubSlug]
 
-  if (harmonyHubClientPutOff) {
+  if (harmonyHubClient) {
     off(hubSlug)
     res.json({message: "ok"})
   }else{
     res.status(404).json({message: "Not Found"})
   }
-  harmonyHubClientPutOff.end();
+  // harmonyHubClient.end();
 })
 
 // DEPRECATED
