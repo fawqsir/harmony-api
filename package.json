@@ -1,18 +1,19 @@
 {
   "name": "harmony-api",
   "version": "2.3.5",
-  "description": "A simple server providing a RESTful and MQTT based service for controlling and monitoring Harmony Hubs.",
+  "description": "A simple server providing a RESTful based service for controlling and monitoring Harmony Hubs.",
   "scripts": {
-    "start": "DEBUG=harmonyhubjs:discover:* node app.js"
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/maddox/harmony-api"
+    "url": "https://github.com/adn182/harmony-api"
   },
-  "author": "Jon Maddox <jon@jonmaddox.com>",
+  "Original author": "Jon Maddox <jon@jonmaddox.com>",
+  "Second auhor" : "ADN182",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/maddox/harmony-api/issues"
+    "url": "https://github.com/adn182/harmony-api/issues"
   },
   "dependencies": {
     "express": "^4.12.4",
