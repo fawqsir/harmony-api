@@ -25,6 +25,23 @@ activity is.
 Harmony API will run on port `8282` by default. Use the `PORT` environment
 variable to use your own port.
 
+### Config file : 
+For Manual Mode :
+{
+	"enableHTTPserver": true,
+	"hubs": [
+		{
+			"name": "Living",
+			"ip": "192.168.5.200"
+		}
+	]
+}
+
+For Discovery Mode : 
+{
+	"enableHTTPserver": true,
+}
+
 ### Docker
 Installation with Docker is straightforward. Adjust the following command so that
 `/path/to/your/config` points to the folder where your want to store your config and run it:
