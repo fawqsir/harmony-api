@@ -38,7 +38,7 @@ For Manual Mode :
 	]
 }
 ```
-For Discovery Mode : 
+For Discovery Mode (default config) : 
 ```json
 {
 	"enableHTTPserver": true,
