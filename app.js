@@ -14,7 +14,7 @@ var harmony = require('harmonyhubjs-client')
 
 var harmonyHubClients = {}
 var harmonyActivitiesCache = {}
-var harmonyActivityUpdateInterval = 5*60*1000 // 5 minute
+var harmonyActivityUpdateInterval = 5*60*1000 // 5 minutes
 var harmonyActivityUpdateTimers = {}
 
 var harmonyHubStates = {}
@@ -22,7 +22,7 @@ var harmonyStateUpdateInterval = 5*1000 // 5 seconds
 var harmonyStateUpdateTimers = {}
 
 var harmonyDevicesCache = {}
-var harmonyDeviceUpdateInterval = 5*60*1000 // 5 minute
+var harmonyDeviceUpdateInterval = 5*60*1000 // 5 minutes
 var harmonyDeviceUpdateTimers = {}
 
 var enableHTTPserver = config.hasOwnProperty("enableHTTPserver") ?
@@ -71,12 +71,14 @@ discover.on('offline', function(hubInfo) {
   delete(harmonyHubClients[hubSlug])
   delete(harmonyActivitiesCache[hubSlug])
   delete(harmonyHubStates[hubSlug])
+  harmonyHubClient.end();
 })
 
 if (config.hasOwnProperty("hubs") && Array.isArray(config.hubs)) {
   config.hubs.forEach(function(hub) {
     harmony(hub.ip).then(function(client){
-      startProcessing(parameterize(hub.name), client)
+        console.log('Starting Manual mode.')
+        startProcessing(parameterize(hub.name), client)
     })
   })
 } else {
@@ -129,6 +131,7 @@ function updateActivities(hubSlug){
   } catch(err) {
     console.log("ERROR: " + err.message);
   }
+  // harmonyHubClient.end();
 
 }
 
@@ -169,7 +172,7 @@ function updateState(hubSlug){
   } catch(err) {
     console.log("ERROR: " + err.message);
   }
-
+  // harmonyHubClient.end();
 }
 
 function updateDevices(hubSlug){
@@ -196,6 +199,7 @@ function updateDevices(hubSlug){
   } catch(err) {
     console.log("Devices ERROR: " + err.message);
   }
+  // harmonyHubClient.end();
 }
 
 function getCommandsFromControlGroup(controlGroup){
@@ -229,6 +233,7 @@ function currentActivity(hubSlug){
   if (!harmonyHubClient || !harmonyHubState) { return null}
 
   return harmonyHubState.current_activity
+  // harmonyHubClient.end();
 }
 
 function activityBySlugs(hubSlug, activitySlug){
@@ -293,6 +298,7 @@ function off(hubSlug){
   harmonyHubClient.turnOff().then(function(){
     updateState(hubSlug)
   })
+  // harmonyHubClient.end();
 }
 
 function startActivity(hubSlug, activityId){
@@ -302,6 +308,7 @@ function startActivity(hubSlug, activityId){
   harmonyHubClient.startActivity(activityId).then(function(){
     updateState(hubSlug)
   })
+  // harmonyHubClient.end();
 }
 
 function sendAction(hubSlug, action, repeat){
@@ -316,6 +323,7 @@ function sendAction(hubSlug, action, repeat){
        harmonyHubClient.send('holdAction', releaseAction)
     })
   }
+  // harmonyHubClient.end();
 }
 
 app.get('/_ping', function(req, res){
@@ -339,6 +347,7 @@ app.get('/hubs/:hubSlug/activities', function(req, res){
   }else{
     res.status(404).json({message: "Not Found"})
   }
+  // harmonyHubClient.end();
 })
 
 app.get('/hubs/:hubSlug/activities/:activitySlug/commands', function(req, res){
@@ -362,6 +371,7 @@ app.get('/hubs/:hubSlug/devices', function(req, res){
   }else{
     res.status(404).json({message: "Not Found"})
   }
+  // harmonyHubClient.end();
 })
 
 app.get('/hubs/:hubSlug/devices/:deviceSlug/commands', function(req, res){
@@ -388,6 +398,7 @@ app.get('/hubs/:hubSlug/status', function(req, res){
   }else{
     res.status(404).json({message: "Not Found"})
   }
+  // harmonyHubClient.end();
 })
 
 app.get('/hubs/:hubSlug/commands', function(req, res){
@@ -428,6 +439,7 @@ app.put('/hubs/:hubSlug/off', function(req, res){
   }else{
     res.status(404).json({message: "Not Found"})
   }
+  // harmonyHubClient.end();
 })
 
 // DEPRECATED
