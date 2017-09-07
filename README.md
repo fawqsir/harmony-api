@@ -27,6 +27,7 @@ variable to use your own port.
 
 ### Config file : 
 For Manual Mode :
+```json
 {
 	"enableHTTPserver": true,
 	"hubs": [
@@ -36,12 +37,13 @@ For Manual Mode :
 		}
 	]
 }
-
+```
 For Discovery Mode : 
+```json
 {
 	"enableHTTPserver": true,
 }
-
+```
 ### Docker
 Installation with Docker is straightforward. Adjust the following command so that
 `/path/to/your/config` points to the folder where your want to store your config and run it:
