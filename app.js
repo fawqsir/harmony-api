@@ -14,7 +14,7 @@ var harmony = require('harmonyhubjs-client')
 
 var harmonyHubClients = {}
 var harmonyActivitiesCache = {}
-var harmonyActivityUpdateInterval = 5*60*1000 // 5 minute
+var harmonyActivityUpdateInterval = 5*60*1000 // 5 minutes
 var harmonyActivityUpdateTimers = {}
 
 var harmonyHubStates = {}
@@ -22,7 +22,7 @@ var harmonyStateUpdateInterval = 5*1000 // 5 seconds
 var harmonyStateUpdateTimers = {}
 
 var harmonyDevicesCache = {}
-var harmonyDeviceUpdateInterval = 5*60*1000 // 5 minute
+var harmonyDeviceUpdateInterval = 5*60*1000 // 5 minutes
 var harmonyDeviceUpdateTimers = {}
 
 var enableHTTPserver = config.hasOwnProperty("enableHTTPserver") ?
@@ -71,12 +71,14 @@ discover.on('offline', function(hubInfo) {
   delete(harmonyHubClients[hubSlug])
   delete(harmonyActivitiesCache[hubSlug])
   delete(harmonyHubStates[hubSlug])
+  harmonyHubClient.end();
 })
 
 if (config.hasOwnProperty("hubs") && Array.isArray(config.hubs)) {
   config.hubs.forEach(function(hub) {
     harmony(hub.ip).then(function(client){
-      startProcessing(parameterize(hub.name), client)
+        console.log('Starting Manual mode.')
+        startProcessing(parameterize(hub.name), client)
     })
   })
 } else {
