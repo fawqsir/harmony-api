@@ -22,12 +22,6 @@ activity is.
 
 ## Settings
 #### Note: 
-On some distros, you might get an error when running it:
-`/usr/bin/node: No such file or directory`
-
-That can probably be fixed by creating a symlink:
-``sudo ln -s `which nodejs` /usr/bin/node``
-
 Harmony API will run on port `8282` by default. Use the `PORT` environment
 variable to use your own port.
 
@@ -142,9 +136,3 @@ These are the endpoints you can hit to do things.
     POST /hubs/:hub_slug/activities/:activity_slug => {message: "ok"}
     POST /hubs/:hub_slug/devices/:device_slug/commands/:command_slug => {message: "ok"}
     POST /hubs/:hub_slug/devices/:device_slug/commands/:command_slug?repeat=3 => {message: "ok"}
-
-## Contributions
-
-* fork
-* create a feature branch
-* open a Pull Request
