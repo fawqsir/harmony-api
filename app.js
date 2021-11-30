@@ -28,6 +28,8 @@ var harmonyDeviceUpdateTimers = {}
 var enableHTTPserver = config.hasOwnProperty("enableHTTPserver") ?
     config.enableHTTPserver : true;
 
+var broadcast = config.broadcast;
+
 var app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, 'public')));
@@ -46,7 +48,10 @@ var hasHarmonyHubClient = function(req, res, next) {
 }
 app.use(hasHarmonyHubClient)
 
-var discover = new harmonyHubDiscover(61991)
+//var discover = new harmonyHubDiscover(61991)
+const discover = new harmonyHubDiscover(61991, {
+  address: broadcast
+})
 
 discover.on('online', function(hubInfo) {
   // Triggered when a new hub was found
