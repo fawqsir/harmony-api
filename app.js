@@ -460,6 +460,7 @@ app.post('/hubs/:hubSlug/start_activity', function(req, res){
   }
 })
 
+// activities start
 app.post('/hubs/:hubSlug/activities/:activitySlug', function(req, res){
   activity = activityBySlugs(req.params.hubSlug, req.params.activitySlug)
 
@@ -472,6 +473,20 @@ app.post('/hubs/:hubSlug/activities/:activitySlug', function(req, res){
   }
 })
 
+// activities command
+app.post('/hubs/:hubSlug/activities/:activitySlug/commands/:commandSlug', function(req, res){
+  command = activityCommandsBySlugs(req.params.hubSlug, req.params.activitySlug, req.params.commandSlug);
+
+  if (command) {
+    sendAction(req.params.hubSlug, command.action, req.query.repeat)
+
+    res.json({message: "ok"})
+  }else{
+    res.status(404).json({message: "Not Found"})
+  }
+})
+
+//device command
 app.post('/hubs/:hubSlug/devices/:deviceSlug/commands/:commandSlug', function(req, res){
   command = commandBySlugs(req.params.hubSlug, req.params.deviceSlug, req.params.commandSlug)
 
