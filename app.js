@@ -475,6 +475,8 @@ app.post('/hubs/:hubSlug/activities/:activitySlug', function(req, res){
 
 // activities command
 app.post('/hubs/:hubSlug/activities/:activitySlug/commands/:commandSlug', function(req, res){
+  hubSlug = req.params.hubSlug
+  activitySlug = req.params.activitySlug
   command = activityCommandsBySlugs(req.params.hubSlug, req.params.activitySlug, req.params.commandSlug);
 
   if (command) {
